@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+
+  snipe-db:
+    container_name: snipe-db
+    hostname: snipe-db
+    image: mariadb:10.11.6-jammy
+    env_file:
+      - ./mailhog.env
+    volumes:
+      - db:/var/lib/mysql
+    command:  --sql_mode="" --default-authentication-plugin=mysql_native_password
+    expose:
+      - "3306"
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 5s
+      retries: 3
+
+  snipe-it:
+    container_name: snipe-it
+    hostname: snipe-it
+    image: snipe/snipe-it
+    env_file:
+      - ./mailhog.env
+    volumes:
+      - lib:/var/lib/snipeit
+      - log:/var/www/html/storage/logs
+    ports:
+      - "8888:80"
+    depends_on:
+        snipe-db:
+          condition: service_healthy
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+    - "8025:8025"
+    expose:
+      - "1025"
+
+volumes:
+  db:
+  lib:
+  log:
