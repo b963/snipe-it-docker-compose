@@ -1,11 +1,9 @@
 # Snipe-It - Docker Compose files
 Snipe-IT is a IT asset management tool.
 
-This repo contains 3 docker-compose files. In production it is best to use a external SMTP server.  
+This repo includes 3 docker-compose files. For production environments, it's recommended to use an external SMTP server.
 
-To ensure the Snipe-It service starts correctly, the docker-compose file is configured to check the status of the database service before initiating Snipe-It. This is achieved by defining service dependencies with `depends_on` and using health checks to verify the database service is ready. Implementing such checks helps prevent the Snipe-It service from starting prematurely, which could lead to an 'Error 500' if the database is not yet operational.  
-
-This Docker stack uses MariaDB as database engine.
+To ensure the Snipe-It service starts properly, the Docker Compose configuration checks the status of the database service before initiating Snipe-It. This is done by defining service dependencies  with `depends_on` and using health checks to verify the database service is ready. These checks prevent the Snipe-It service from starting too early, which could result in a '500 Error' if the database isn't fully operational.
 
 ## The Docker-compose files:  
 1. No mails (docker-compose.local.yml)
